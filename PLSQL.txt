@@ -1,0 +1,47 @@
+DECLARE
+    TYPE t_namesarray IS VARRAY(5) OF VARCHAR2(10);
+    TYPE t_grades IS VARRAY(5) OF NUMBER;
+    v_names t_namesarray;
+    v_marks t_grades;
+    v_total NUMBER;
+BEGIN
+    v_names := t_namesarray('Shajal','Khaled','Najmul','Shaon','Miaji');
+    v_marks := t_grades(80,99,90,85,95);
+    v_total := v_names.count;
+    
+    dbms_output.put_line(v_total);
+    
+    FOR i in 1..v_total loop
+        dbms_output.put_line(v_names(i));
+        dbms_output.put_line(v_marks(i));
+    END LOOP;
+END;
+-------------------
+DECLARE
+    c_employee_id hr.employees.employee_id%type;
+    c_first_name  hr.employees.first_name%type;
+    c_last_name   hr.employees.last_name%type;
+    c_email       hr.employees.email%type;
+    l_count       number;
+ 
+    cursor c_employee is (
+        select  employee_id,
+                first_name,
+                last_name,
+                email 
+        from hr.employees
+    );
+BEGIN
+    open c_employee;
+    loop
+        fetch c_employee into  c_employee_id,
+                               c_first_name,
+                               c_last_name,
+                               c_email;
+                               
+            exit when c_employee%notfound;
+            dbms_output.put_line('EmployeeId: '||c_employee_id||' FirstName: '||c_first_name||' LastName: '||c_last_name||' Email: '||c_email);
+    end loop;
+    dbms_output.put_line('Total Row Count : '||c_employee%rowcount);
+    close c_employee;
+END;
